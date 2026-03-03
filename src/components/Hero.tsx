@@ -118,7 +118,7 @@ const Hero = () => {
             transition={{ duration: 0.7, delay: 0.6 }}
           >
             <a
-              href="https://calendly.com/sshah-localdigitalbusiness/30min"
+              href="https://calendly.com/sshah-localdigitalbusiness/15min"
               target="_blank"
               rel="noopener noreferrer"
               className="group inline-flex items-center gap-3 bg-accent text-accent-foreground px-7 py-3.5 text-sm font-semibold tracking-wide hover:bg-accent/90 transition-colors"

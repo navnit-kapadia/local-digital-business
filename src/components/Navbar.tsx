@@ -21,7 +21,7 @@ const Navbar = () => {
             Contact
           </a>
           <a
-            href="https://calendly.com/sshah-localdigitalbusiness/30min"
+            href="https://calendly.com/sshah-localdigitalbusiness/15min"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center bg-accent text-accent-foreground px-5 py-2 text-[13px] font-semibold hover:bg-accent/90 transition-colors tracking-wide"

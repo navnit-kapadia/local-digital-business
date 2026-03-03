@@ -46,15 +46,27 @@ const Contact = () => {
       return;
     }
     setSubmitting(true);
-    // Simulate submission
-    setTimeout(() => {
-      toast({
-        title: "Message sent!",
-        description: "We'll get back to you shortly.",
-      });
-      setForm({ name: "", email: "", phone: "", interest: "", message: "" });
-      setSubmitting(false);
-    }, 1000);
+
+    const to = "sshah@localdigitalbusiness.com.au";
+    const subject = `Contact: ${form.interest} – ${form.name}`;
+    const body = [
+      `Name: ${form.name}`,
+      `Email: ${form.email}`,
+      `Phone: ${form.phone}`,
+      `Interested in: ${form.interest}`,
+      "",
+      form.message,
+    ].join("\n");
+
+    const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailto;
+
+    toast({
+      title: "Opening your email",
+      description: "Your email client will open — just hit send to reach us.",
+    });
+    setForm({ name: "", email: "", phone: "", interest: "", message: "" });
+    setSubmitting(false);
   };
 
   return (
