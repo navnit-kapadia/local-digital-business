@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Zap } from "lucide-react";
@@ -10,31 +12,31 @@ import heroNdis from "@/assets/hero-ndis.jpg";
 
 const slides = [
   {
-    src: heroHairdresser,
+    src: heroHairdresser.src,
     alt: "Hairdresser styling client in modern salon",
     position: "object-[60%_top] sm:object-top",
     flip: false,
   },
   {
-    src: heroRestaurant,
+    src: heroRestaurant.src,
     alt: "Chef plating food in restaurant kitchen",
     position: "object-[40%_top] sm:object-top",
     flip: false,
   },
   {
-    src: heroTradie,
+    src: heroTradie.src,
     alt: "Tradesman working on site",
     position: "object-[50%_top] sm:object-[70%_top]",
     flip: true,
   },
   {
-    src: heroFoodtruck,
+    src: heroFoodtruck.src,
     alt: "Food truck serving customers at golden hour",
     position: "object-top",
     flip: false,
   },
   {
-    src: heroNdis,
+    src: heroNdis.src,
     alt: "NDIS support worker helping a client",
     position: "object-[60%_top] sm:object-[30%_top]",
     flip: false,

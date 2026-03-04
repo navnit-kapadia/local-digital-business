@@ -1,3 +1,5 @@
+"use client";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
@@ -34,7 +36,7 @@ const Contact = () => {
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = contactSchema.safeParse(form);
     if (!result.success) {
@@ -47,26 +49,44 @@ const Contact = () => {
     }
     setSubmitting(true);
 
-    const to = "sshah@localdigitalbusiness.com.au";
-    const subject = `Contact: ${form.interest} – ${form.name}`;
-    const body = [
-      `Name: ${form.name}`,
-      `Email: ${form.email}`,
-      `Phone: ${form.phone}`,
-      `Interested in: ${form.interest}`,
-      "",
-      form.message,
-    ].join("\n");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          interest: form.interest,
+          message: form.message,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
 
-    const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailto;
-
-    toast({
-      title: "Opening your email",
-      description: "Your email client will open — just hit send to reach us.",
-    });
-    setForm({ name: "", email: "", phone: "", interest: "", message: "" });
-    setSubmitting(false);
+      if (res.ok && data.success) {
+        toast({
+          title: "Message sent!",
+          description: "We'll get back to you shortly.",
+        });
+        setForm({ name: "", email: "", phone: "", interest: "", message: "" });
+      } else {
+        toast({
+          title: "Something went wrong",
+          description:
+            data.error || "Please try again or email sshah@localdigitalbusiness.com.au",
+          variant: "destructive",
+        });
+      }
+    } catch {
+      toast({
+        title: "Something went wrong",
+        description:
+          "Please try again or email sshah@localdigitalbusiness.com.au",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (

@@ -60,6 +60,15 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Contact form (Resend)
+
+The Contact page sends email to **sshah@localdigitalbusiness.com.au** via [Resend](https://resend.com) using a Vercel serverless function.
+
+**Setup:** In Vercel → Project → Settings → Environment Variables, add:
+- `RESEND_API_KEY` = your Resend API key (get one at [resend.com/api-keys](https://resend.com/api-keys))
+
+Optional: `RESEND_FROM` to use a custom sender (must be a [verified domain](https://resend.com/domains) in Resend). If unset, emails send from `onboarding@resend.dev`.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.

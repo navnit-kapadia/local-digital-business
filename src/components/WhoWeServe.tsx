@@ -6,7 +6,7 @@ const WhoWeServe = () => {
     <section className="relative section-padding overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0">
-        <img src={whoWeServeBg} alt="" className="w-full h-full object-cover" />
+        <img src={whoWeServeBg.src} alt="" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/75" />
       </div>
 
