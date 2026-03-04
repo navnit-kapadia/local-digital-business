@@ -1,12 +1,20 @@
+"use client";
+
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Check, Sparkles, Star } from "lucide-react";
+import { Check, Sparkles, Star, Info } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const plans = [
   {
     name: "Professional",
     price: "$899",
-    introPrice: "$699",
+    introPrice: "$750",
     description:
       "A clean, professional one-page website built to get you online quickly and looking credible.",
     includes: [
@@ -14,7 +22,7 @@ const plans = [
       "Contact section",
       "Booking form",
       "Mobile-friendly design",
-      "Basic SEO setup",
+      { text: "SEO & AEO setup", tooltip: "seo" } as { text: string; tooltip?: string },
       "Live in 5 days",
     ],
     bestFor: "Sole traders who need a simple, professional online presence.",
@@ -47,7 +55,8 @@ const plans = [
       "Ongoing support options",
       "Tailored integrations",
     ],
-    bestFor: "Businesses that need something beyond a standard package.",
+    bestFor:
+      "Businesses that need something beyond a standard package.",
     popular: false,
   },
 ];
@@ -59,7 +68,6 @@ const Pricing = () => {
       <div className="pt-16">
         <section className="section-padding bg-background">
           <div className="container-narrow px-4 sm:px-6 lg:px-8">
-            {/* Header */}
             <div className="text-center mb-16">
               <h1 className="font-heading text-4xl sm:text-5xl font-bold text-foreground mb-4">
                 Simple, Transparent Pricing
@@ -69,7 +77,6 @@ const Pricing = () => {
               </p>
             </div>
 
-            {/* Plans */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
               {plans.map((plan) => (
                 <div
@@ -95,7 +102,7 @@ const Pricing = () => {
                   <div className="mt-4 mb-4 min-h-[100px]">
                     {plan.introPrice ? (
                       <div className="flex flex-col">
-                        <span className="text-sm text-muted-foreground line-through">
+                        <span className="text-base text-muted-foreground line-through decoration-destructive/60">
                           {plan.price}
                         </span>
                         <span className="font-heading text-5xl font-bold text-foreground">
@@ -129,14 +136,48 @@ const Pricing = () => {
                   )}
 
                   <ul className="space-y-3 mb-8 flex-1">
-                    {plan.includes.map((item) => (
-                      <li key={item} className="flex items-start gap-3">
-                        <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center shrink-0 mt-0.5">
-                          <Check className="w-3 h-3 text-success" />
-                        </div>
-                        <span className="text-sm text-foreground">{item}</span>
-                      </li>
-                    ))}
+                    {plan.includes.map((item) => {
+                      const isObject =
+                        typeof item === "object" && item !== null && "text" in item;
+                      const text = isObject ? (item as { text: string }).text : (item as string);
+                      const tooltip = isObject
+                        ? (item as { tooltip?: string }).tooltip
+                        : null;
+                      return (
+                        <li key={text} className="flex items-start gap-3">
+                          <div className="w-5 h-5 rounded-full bg-success/10 flex items-center justify-center shrink-0 mt-0.5">
+                            <Check className="w-3 h-3 text-success" />
+                          </div>
+                          <span className="text-sm text-foreground inline-flex items-center gap-1.5">
+                            {text}
+                            {tooltip === "seo" && (
+                              <TooltipProvider delayDuration={0}>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="w-3.5 h-3.5 text-muted-foreground cursor-help shrink-0" />
+                                  </TooltipTrigger>
+                                  <TooltipContent
+                                    side="top"
+                                    className="max-w-[260px] text-xs leading-relaxed"
+                                  >
+                                    <p className="mb-1">
+                                      <strong>SEO</strong> helps your website
+                                      show up on Google when people search for
+                                      your services.
+                                    </p>
+                                    <p>
+                                      <strong>AEO</strong> helps your website
+                                      appear in AI-generated answers from tools
+                                      like ChatGPT and voice assistants.
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            )}
+                          </span>
+                        </li>
+                      );
+                    })}
                   </ul>
 
                   <div className="bg-muted/50 rounded-lg p-4 mb-6">
@@ -162,7 +203,6 @@ const Pricing = () => {
               ))}
             </div>
 
-            {/* Add-On */}
             <div className="max-w-6xl mx-auto">
               <div className="rounded-2xl border border-border bg-card p-8 flex flex-col sm:flex-row sm:items-center gap-6">
                 <div className="flex-1">
@@ -177,8 +217,8 @@ const Pricing = () => {
                     <span className="text-accent">$599</span>
                   </h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    For businesses that don't want to miss opportunities while
-                    busy or after hours.
+                    For businesses that don&apos;t want to miss opportunities
+                    while busy or after hours.
                   </p>
                   <ul className="space-y-2">
                     {[

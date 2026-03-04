@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import whoWeServeBg from "@/assets/who-we-serve-bg.jpg";
 

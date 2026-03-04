@@ -1,25 +1,82 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Providers } from "./providers";
+import { JsonLd } from "@/components/JsonLd";
+import {
+  SITE_URL,
+  SITE_NAME,
+  DEFAULT_TITLE,
+  DEFAULT_DESCRIPTION,
+  ORGANIZATION,
+  WEBSITE_SCHEMA,
+} from "@/lib/seo";
 import "./globals.css";
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#1e3a5f",
+};
+
 export const metadata: Metadata = {
-  title:
-    "Local Digital Business — Websites & AI Assistants for Small Businesses",
-  description:
-    "Simple websites and smart AI assistants for sole traders and small businesses. Live in 5 days, fixed pricing, no tech stress.",
-  authors: [{ name: "Local Digital Business" }],
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: DEFAULT_TITLE,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: DEFAULT_DESCRIPTION,
+  keywords: [
+    "small business website Australia",
+    "sole trader website",
+    "AI assistant for business",
+    "website Melbourne",
+    "fixed price website",
+    "SEO Australia",
+    "AEO answer engine",
+    "local business website",
+    "get found on Google",
+    "24/7 booking",
+  ],
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  formatDetection: { email: false, address: false, telephone: false },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   openGraph: {
-    title: "Local Digital Business — Get Found. Get Booked. 24/7.",
-    description:
-      "We build simple websites and smart assistants for small businesses — so you never miss an enquiry.",
     type: "website",
-    images: ["https://lovable.dev/opengraph-image-p98pqg.png"],
+    locale: "en_AU",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: SITE_NAME,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    site: "@Lovable",
-    images: ["https://lovable.dev/opengraph-image-p98pqg.png"],
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: ["/og-image.png"],
   },
+  alternates: {
+    canonical: SITE_URL,
+  },
+  category: "business",
 };
 
 export default function RootLayout({
@@ -28,8 +85,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en-AU">
       <body>
+        <JsonLd data={[ORGANIZATION, WEBSITE_SCHEMA]} />
         <Providers>{children}</Providers>
       </body>
     </html>

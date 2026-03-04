@@ -2,7 +2,7 @@
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { MapPin, Send } from "lucide-react";
 import { useState } from "react";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
@@ -30,7 +30,7 @@ const Contact = () => {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: "" });
@@ -73,7 +73,8 @@ const Contact = () => {
         toast({
           title: "Something went wrong",
           description:
-            data.error || "Please try again or email sshah@localdigitalbusiness.com.au",
+            data.error ||
+            "Please try again or email sshah@localdigitalbusiness.com.au",
           variant: "destructive",
         });
       }
@@ -100,36 +101,13 @@ const Contact = () => {
                 Get in Touch
               </h1>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Have a question or ready to get started? Drop us a message and
-                we'll be in touch.
+                Have a question or ready to get started?
+                <br />
+                Drop us a message and we&apos;ll be in touch.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-[1fr_1.5fr] gap-12 max-w-4xl mx-auto">
-              {/* Contact Info */}
-              <div className="space-y-8">
-                {[
-                  {
-                    icon: MapPin,
-                    label: "Location",
-                    value: "Melbourne, Australia",
-                  },
-                ].map(({ icon: Icon, label, value }) => (
-                  <div key={label} className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
-                      <Icon className="w-4 h-4 text-accent" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">
-                        {label}
-                      </p>
-                      <p className="text-foreground font-medium">{value}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Form */}
+            <div className="max-w-2xl mx-auto">
               <form
                 onSubmit={handleSubmit}
                 className="rounded-2xl border border-border bg-card p-8 space-y-5"
@@ -220,6 +198,7 @@ const Contact = () => {
                     <option value="Website + Smart Assistant">
                       Website + Smart Assistant
                     </option>
+                    <option value="Something Else">Something Else</option>
                   </select>
                   {errors.interest && (
                     <p className="text-sm text-destructive mt-1">
@@ -258,6 +237,11 @@ const Contact = () => {
                   {submitting ? "Sending..." : "Send Message"}
                 </button>
               </form>
+
+              <div className="flex items-center justify-center gap-2 mt-8 text-muted-foreground">
+                <MapPin className="w-4 h-4 text-accent" />
+                <span className="text-sm font-medium">Melbourne, Australia</span>
+              </div>
             </div>
           </div>
         </section>
