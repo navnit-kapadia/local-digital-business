@@ -1,12 +1,15 @@
+import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Comparison from "@/components/Comparison";
-import HowItWorks from "@/components/HowItWorks";
-import WhatYouGet from "@/components/WhatYouGet";
-import WhoWeServe from "@/components/WhoWeServe";
-import FAQ from "@/components/FAQ";
-import FinalCTA from "@/components/FinalCTA";
-import Footer from "@/components/Footer";
+
+// Lazy-load below-fold sections to reduce initial JS bundle and TBT
+const HowItWorks = dynamic(() => import("@/components/HowItWorks"));
+const WhatYouGet = dynamic(() => import("@/components/WhatYouGet"));
+const WhoWeServe = dynamic(() => import("@/components/WhoWeServe"));
+const FAQ = dynamic(() => import("@/components/FAQ"));
+const FinalCTA = dynamic(() => import("@/components/FinalCTA"));
+const Footer = dynamic(() => import("@/components/Footer"));
 import { JsonLd } from "@/components/JsonLd";
 import {
   buildFAQSchema,

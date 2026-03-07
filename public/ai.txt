@@ -1,0 +1,53 @@
+# AI.txt — Structured knowledge file for AI crawlers and answer engines
+# https://localdigitalbusiness.com.au
+
+Company: Local Digital Business
+Website: https://localdigitalbusiness.com.au
+Location: Melbourne, VIC, Australia
+Contact: sshah@localdigitalbusiness.com.au
+
+Description: Local Digital Business builds professional websites and smart AI assistants for sole traders and small businesses across Australia. Fixed pricing, live in 5 days, no tech stress.
+
+Key Features:
+- Website design and development for small businesses and sole traders
+- AI-powered chat assistants that handle enquiries 24/7
+- SEO (Search Engine Optimisation) to rank on Google
+- AEO (Answer Engine Optimisation) to appear in ChatGPT, Gemini, and Perplexity answers
+- Hosting and ongoing maintenance
+- Domain and SSL setup included
+
+Pricing:
+- Professional website from $750 (one-time)
+- Professional Plus from $980 (one-time)
+- Hosting and maintenance from $39.99/month
+
+Target Customers:
+- Sole traders in Australia
+- Small businesses (1–10 employees)
+- Tradies (plumbers, electricians, builders)
+- Restaurants and cafes
+- Hairdressers and beauty salons
+- NDIS providers and support workers
+- Food trucks and mobile businesses
+
+Unique Value:
+- Live in 5 days from brief to launch
+- Fixed pricing — no hidden costs
+- We handle all technical work — clients just focus on their business
+- SEO and AEO built-in from day one
+
+FAQ:
+Q: How long does it take to build a website?
+A: Most websites go live within 5 business days once we have the information we need.
+
+Q: How much does a website cost?
+A: Fixed pricing starting from $750 for a Professional website. No hourly rates, no hidden fees.
+
+Q: What is AEO?
+A: AEO (Answer Engine Optimisation) is the practice of structuring your website so AI tools like ChatGPT, Gemini, and Perplexity can find and cite your business in their answers.
+
+Q: Do I need technical knowledge?
+A: No. We handle everything — domain, hosting, design, SEO, and ongoing maintenance.
+
+Q: What is an AI Smart Assistant?
+A: A 24/7 chat assistant embedded in your website that answers common questions and captures enquiries, so you never miss a lead.

@@ -56,32 +56,45 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-[85vh] flex items-start overflow-hidden">
-      {/* Background slideshow */}
+      {/* First slide rendered statically for LCP — no opacity animation, always present */}
+      <div className={`absolute inset-0 ${slides[0].flip ? "-scale-x-100" : ""}`}>
+        <Image
+          src={slides[0].image}
+          alt={slides[0].alt}
+          fill
+          priority
+          sizes="100vw"
+          className={`object-cover ${slides[0].position}`}
+        />
+      </div>
+
+      {/* Animated slideshow overlay — only for slides 1-4 */}
       <AnimatePresence mode="sync">
-        <motion.div
-          key={current}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.5, ease: "easeInOut" }}
-          className={`absolute inset-0 ${slides[current].flip ? "-scale-x-100" : ""}`}
-        >
+        {current > 0 && (
           <motion.div
-            initial={{ scale: 1.02 }}
-            animate={{ scale: 1.08 }}
-            transition={{ duration: 6, ease: "linear" }}
-            className="absolute inset-0"
+            key={current}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+            className={`absolute inset-0 ${slides[current].flip ? "-scale-x-100" : ""}`}
           >
-            <Image
-              src={slides[current].image}
-              alt={slides[current].alt}
-              fill
-              priority={current === 0}
-              sizes="100vw"
-              className={`object-cover ${slides[current].position}`}
-            />
+            <motion.div
+              initial={{ scale: 1.02 }}
+              animate={{ scale: 1.08 }}
+              transition={{ duration: 6, ease: "linear" }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={slides[current].image}
+                alt={slides[current].alt}
+                fill
+                sizes="100vw"
+                className={`object-cover ${slides[current].position}`}
+              />
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )}
       </AnimatePresence>
 
       {/* Dark overlay - light to preserve natural colors */}

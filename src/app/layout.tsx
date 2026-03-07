@@ -95,7 +95,7 @@ export default function RootLayout({
       lang="en-AU"
       className={`${dmSans.variable} ${spaceGrotesk.variable}`}
     >
-      <body>
+      <body suppressHydrationWarning>
         <JsonLd data={[ORGANIZATION, WEBSITE_SCHEMA]} />
         <Providers>{children}</Providers>
       </body>
