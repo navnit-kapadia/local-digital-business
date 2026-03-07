@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Zap } from "lucide-react";
 
@@ -12,31 +13,31 @@ import heroNdis from "@/assets/hero-ndis.jpg";
 
 const slides = [
   {
-    src: heroHairdresser.src,
+    image: heroHairdresser,
     alt: "Hairdresser styling client in modern salon",
     position: "object-[60%_top] sm:object-top",
     flip: false,
   },
   {
-    src: heroRestaurant.src,
+    image: heroRestaurant,
     alt: "Chef plating food in restaurant kitchen",
     position: "object-[40%_top] sm:object-top",
     flip: false,
   },
   {
-    src: heroTradie.src,
+    image: heroTradie,
     alt: "Tradesman working on site",
     position: "object-[50%_top] sm:object-[70%_top]",
     flip: true,
   },
   {
-    src: heroFoodtruck.src,
+    image: heroFoodtruck,
     alt: "Food truck serving customers at golden hour",
     position: "object-top",
     flip: false,
   },
   {
-    src: heroNdis.src,
+    image: heroNdis,
     alt: "NDIS support worker helping a client",
     position: "object-[60%_top] sm:object-[30%_top]",
     flip: false,
@@ -65,23 +66,30 @@ const Hero = () => {
           transition={{ duration: 1.5, ease: "easeInOut" }}
           className={`absolute inset-0 ${slides[current].flip ? "-scale-x-100" : ""}`}
         >
-          <motion.img
-            src={slides[current].src}
-            alt={slides[current].alt}
+          <motion.div
             initial={{ scale: 1.02 }}
             animate={{ scale: 1.08 }}
             transition={{ duration: 6, ease: "linear" }}
-            className={`absolute inset-0 w-full h-full object-cover ${slides[current].position}`}
-          />
+            className="absolute inset-0"
+          >
+            <Image
+              src={slides[current].image}
+              alt={slides[current].alt}
+              fill
+              priority={current === 0}
+              sizes="100vw"
+              className={`object-cover ${slides[current].position}`}
+            />
+          </motion.div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/55 to-black/30 z-10" />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70 z-10" />
+      {/* Dark overlay - light to preserve natural colors */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/30 to-transparent z-10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/10 to-black/30 z-10" />
 
       {/* Content */}
-      <div className="relative z-20 container-narrow w-full pt-28 pb-16 px-4 sm:px-6 lg:px-8">
+      <div className="relative z-20 container-narrow w-full pt-20 sm:pt-28 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl">
           <motion.div
             initial={{ opacity: 0 }}
@@ -108,7 +116,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.45 }}
-            className="text-lg sm:text-xl text-white/75 max-w-xl mb-8 leading-relaxed"
+            className="text-lg sm:text-xl text-white/90 max-w-xl mb-8 leading-relaxed drop-shadow-md"
           >
             We build simple websites and smart assistants, so you never miss an
             enquiry.
@@ -139,24 +147,15 @@ const Hero = () => {
           className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl"
         >
           {[
-            {
-              stat: "Live in 5 Days",
-              desc: "From brief to launch. No delays, no drag",
-            },
-            {
-              stat: "Fixed Pricing",
-              desc: "Know your cost upfront. No hourly surprises",
-            },
-            {
-              stat: "No Tech Stress",
-              desc: "We handle everything so you can focus on work",
-            },
+            { stat: "Live in 5 Days", desc: "From brief to launch. No delays, no drag" },
+            { stat: "Fixed Pricing", desc: "Know your cost upfront. No hourly surprises" },
+            { stat: "No Tech Stress", desc: "We handle everything so you can focus on work" },
           ].map((item, i) => (
-            <div key={i} className="border-l-2 border-accent/60 pl-4">
-              <span className="inline-block bg-accent/20 backdrop-blur-sm text-white font-bold text-sm px-2.5 py-1 mb-1.5">
+            <div key={i} className="border-l-2 border-accent/60 pl-4 bg-black/30 backdrop-blur-sm py-2.5 pr-3">
+              <span className="inline-block bg-accent/25 text-white font-bold text-sm px-2.5 py-1 mb-1.5">
                 {item.stat}
               </span>
-              <p className="text-white/65 text-sm leading-snug">{item.desc}</p>
+              <p className="text-white/90 text-sm leading-snug">{item.desc}</p>
             </div>
           ))}
         </motion.div>

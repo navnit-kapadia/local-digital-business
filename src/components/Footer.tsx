@@ -13,6 +13,7 @@ const Footer = () => {
               alt="Local Digital Business"
               className="h-28 sm:h-32 w-auto mb-[-8px]"
               style={{ clipPath: "inset(0 0 12% 0)" }}
+              sizes="(max-width: 640px) 7rem, 8rem"
             />
           </Link>
           <div className="flex items-center gap-6 text-[13px]">

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import whoWeServeBg from "@/assets/who-we-serve-bg.jpg";
 
@@ -8,7 +9,14 @@ const WhoWeServe = () => {
     <section className="relative section-padding overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0">
-        <img src={whoWeServeBg.src} alt="" className="w-full h-full object-cover" />
+        <Image
+          src={whoWeServeBg}
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover"
+          aria-hidden="true"
+        />
         <div className="absolute inset-0 bg-black/75" />
       </div>
 

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { DM_Sans, Space_Grotesk } from "next/font/google";
 import { Providers } from "./providers";
 import { JsonLd } from "@/components/JsonLd";
 import {
@@ -10,6 +11,20 @@ import {
   WEBSITE_SCHEMA,
 } from "@/lib/seo";
 import "./globals.css";
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -58,20 +73,11 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: DEFAULT_TITLE,
     description: DEFAULT_DESCRIPTION,
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: SITE_NAME,
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: DEFAULT_TITLE,
     description: DEFAULT_DESCRIPTION,
-    images: ["/og-image.png"],
   },
   alternates: {
     canonical: SITE_URL,
@@ -85,7 +91,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en-AU">
+    <html
+      lang="en-AU"
+      className={`${dmSans.variable} ${spaceGrotesk.variable}`}
+    >
       <body>
         <JsonLd data={[ORGANIZATION, WEBSITE_SCHEMA]} />
         <Providers>{children}</Providers>
