@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const TO_EMAIL = "sshah@localdigitalbusiness.com.au";
-const FROM_EMAIL =
-  process.env.RESEND_FROM ||
-  "Local Digital Business <onboarding@resend.dev>";
+const TO_EMAILS = ["sshah@localdigitalbusiness.com.au", "navnitkapadia@gmail.com"];
 
 function escapeHtml(s: string): string {
   return s
@@ -15,10 +12,23 @@ function escapeHtml(s: string): string {
     .replace(/'/g, "&#039;");
 }
 
+function createTransporter() {
+  const user = process.env.GMAIL_USER;
+  const pass = process.env.GMAIL_APP_PASSWORD;
+  if (!user || !pass) return null;
+  return nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: { user, pass },
+  });
+}
+
 export async function POST(request: Request) {
-  if (!process.env.RESEND_API_KEY) {
+  const transporter = createTransporter();
+  if (!transporter) {
     return NextResponse.json(
-      { error: "Email not configured (missing RESEND_API_KEY)" },
+      { error: "Email not configured (missing GMAIL_USER or GMAIL_APP_PASSWORD)" },
       { status: 500 }
     );
   }
@@ -48,8 +58,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const resend = new Resend(process.env.RESEND_API_KEY);
-
+  const fromName = process.env.GMAIL_FROM_NAME || "Local Digital Business";
+  const fromEmail = process.env.GMAIL_USER!;
   const subject = `Contact: ${interest || "Enquiry"} – ${name}`;
   const text = [
     `Name: ${name}`,
@@ -67,22 +77,20 @@ export async function POST(request: Request) {
     `<p>${escapeHtml(message).replace(/\n/g, "<br>")}</p>`,
   ].join("");
 
-  const { data, error } = await resend.emails.send({
-    from: FROM_EMAIL,
-    to: [TO_EMAIL],
-    replyTo: email,
-    subject,
-    text,
-    html,
-  });
-
-  if (error) {
-    console.error("Resend error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to send email" },
-      { status: 500 }
-    );
+  try {
+    await transporter.sendMail({
+      from: `"${fromName}" <${fromEmail}>`,
+      to: TO_EMAILS,
+      replyTo: email,
+      subject,
+      text,
+      html,
+    });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Failed to send email";
+    console.error("SMTP error:", err);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 
-  return NextResponse.json({ success: true, id: data?.id });
+  return NextResponse.json({ success: true });
 }
