@@ -5,10 +5,6 @@ export async function GET() {
   const user = process.env.GMAIL_USER;
   const pass = process.env.GMAIL_APP_PASSWORD;
   const fromName = process.env.GMAIL_FROM_NAME || "Local Digital Business";
-  const toEmails = [
-    process.env.CONTACT_FROM_EMAIL || "sshah@localdigitalbusiness.com.au",
-    user,
-  ];
 
   if (!user || !pass) {
     return NextResponse.json(
@@ -16,6 +12,11 @@ export async function GET() {
       { status: 500 }
     );
   }
+
+  const toEmails: string[] = [
+    process.env.CONTACT_FROM_EMAIL || "sshah@localdigitalbusiness.com.au",
+    user,
+  ];
 
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
