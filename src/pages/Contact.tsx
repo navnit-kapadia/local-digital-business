@@ -30,6 +30,10 @@ const Contact = () => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+
+  const isFormValid = contactSchema.safeParse(form).success;
+  const canSubmit = isFormValid && !!captchaToken && !submitting;
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -85,6 +89,7 @@ const Contact = () => {
         });
         setForm({ name: "", email: "", phone: "", interest: "", message: "" });
         recaptchaRef.current?.reset();
+        setCaptchaToken(null);
       } else {
         toast({
           title: "Something went wrong",
@@ -94,6 +99,7 @@ const Contact = () => {
           variant: "destructive",
         });
         recaptchaRef.current?.reset();
+        setCaptchaToken(null);
       }
     } catch {
       toast({
@@ -103,6 +109,7 @@ const Contact = () => {
         variant: "destructive",
       });
       recaptchaRef.current?.reset();
+      setCaptchaToken(null);
     } finally {
       setSubmitting(false);
     }
@@ -249,7 +256,13 @@ const Contact = () => {
 
                 <div>
                   {SITE_KEY ? (
-                    <ReCAPTCHA ref={recaptchaRef} sitekey={SITE_KEY} />
+                    <ReCAPTCHA
+                      ref={recaptchaRef}
+                      sitekey={SITE_KEY}
+                      onChange={(token) => setCaptchaToken(token)}
+                      onExpired={() => setCaptchaToken(null)}
+                      onErrored={() => setCaptchaToken(null)}
+                    />
                   ) : (
                     <p className="text-sm text-muted-foreground">
                       reCAPTCHA not configured (missing NEXT_PUBLIC_RECAPTCHA_SITE_KEY)
@@ -264,8 +277,8 @@ const Contact = () => {
 
                 <button
                   type="submit"
-                  disabled={submitting}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-accent text-accent-foreground px-6 py-3 text-sm font-semibold hover:bg-accent/90 transition-colors disabled:opacity-50 w-full"
+                  disabled={!canSubmit}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-accent text-accent-foreground px-6 py-3 text-sm font-semibold hover:bg-accent/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed w-full"
                 >
                   <Send className="w-4 h-4" />
                   {submitting ? "Sending..." : "Send Message"}
