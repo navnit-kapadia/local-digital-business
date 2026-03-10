@@ -3,9 +3,10 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { MapPin, Send } from "lucide-react";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useRef } from "react";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
@@ -15,14 +16,11 @@ const contactSchema = z.object({
   message: z.string().trim().min(1, "Message is required").max(1000),
 });
 
-function generateCaptcha() {
-  const a = Math.floor(Math.random() * 10) + 1;
-  const b = Math.floor(Math.random() * 10) + 1;
-  return { question: `What is ${a} + ${b}?`, answer: a + b };
-}
+const SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? "";
 
 const Contact = () => {
   const { toast } = useToast();
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -32,17 +30,6 @@ const Contact = () => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
-  const [captcha, setCaptcha] = useState(generateCaptcha);
-  const [captchaInput, setCaptchaInput] = useState("");
-
-  const refreshCaptcha = useCallback(() => {
-    setCaptcha(generateCaptcha());
-    setCaptchaInput("");
-  }, []);
-
-  useEffect(() => {
-    refreshCaptcha();
-  }, [refreshCaptcha]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -55,6 +42,7 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     const result = contactSchema.safeParse(form);
     const fieldErrors: Record<string, string> = {};
     if (!result.success) {
@@ -62,14 +50,17 @@ const Contact = () => {
         if (err.path[0]) fieldErrors[err.path[0] as string] = err.message;
       });
     }
-    if (parseInt(captchaInput, 10) !== captcha.answer) {
-      fieldErrors.captcha = "Incorrect answer, please try again";
-      refreshCaptcha();
+
+    const recaptchaToken = recaptchaRef.current?.getValue();
+    if (!recaptchaToken) {
+      fieldErrors.recaptcha = "Please complete the reCAPTCHA verification";
     }
+
     if (Object.keys(fieldErrors).length > 0) {
       setErrors(fieldErrors);
       return;
     }
+
     setSubmitting(true);
 
     try {
@@ -82,6 +73,7 @@ const Contact = () => {
           phone: form.phone,
           interest: form.interest,
           message: form.message,
+          recaptchaToken,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -92,7 +84,7 @@ const Contact = () => {
           description: "We'll get back to you shortly.",
         });
         setForm({ name: "", email: "", phone: "", interest: "", message: "" });
-        refreshCaptcha();
+        recaptchaRef.current?.reset();
       } else {
         toast({
           title: "Something went wrong",
@@ -101,6 +93,7 @@ const Contact = () => {
             "Please try again or email sshah@localdigitalbusiness.com.au",
           variant: "destructive",
         });
+        recaptchaRef.current?.reset();
       }
     } catch {
       toast({
@@ -109,6 +102,7 @@ const Contact = () => {
           "Please try again or email sshah@localdigitalbusiness.com.au",
         variant: "destructive",
       });
+      recaptchaRef.current?.reset();
     } finally {
       setSubmitting(false);
     }
@@ -252,31 +246,22 @@ const Contact = () => {
                     </p>
                   )}
                 </div>
+
                 <div>
-                  <label
-                    htmlFor="captcha"
-                    className="text-sm font-medium text-foreground block mb-1.5"
-                  >
-                    {captcha.question}
-                  </label>
-                  <input
-                    id="captcha"
-                    name="captcha"
-                    type="number"
-                    value={captchaInput}
-                    onChange={(e) => {
-                      setCaptchaInput(e.target.value);
-                      setErrors({ ...errors, captcha: "" });
-                    }}
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    placeholder="Your answer"
-                  />
-                  {errors.captcha && (
+                  {SITE_KEY ? (
+                    <ReCAPTCHA ref={recaptchaRef} sitekey={SITE_KEY} />
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      reCAPTCHA not configured (missing NEXT_PUBLIC_RECAPTCHA_SITE_KEY)
+                    </p>
+                  )}
+                  {errors.recaptcha && (
                     <p className="text-sm text-destructive mt-1">
-                      {errors.captcha}
+                      {errors.recaptcha}
                     </p>
                   )}
                 </div>
+
                 <button
                   type="submit"
                   disabled={submitting}
