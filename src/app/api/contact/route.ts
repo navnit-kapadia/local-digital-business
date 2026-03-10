@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
-const TO_EMAILS = ["sshah@localdigitalbusiness.com.au", "navnitkapadia@gmail.com"];
+const TO_EMAILS = [
+  "sshah@localdigitalbusiness.com.au",
+  "navnitkapadia@gmail.com",
+];
 
 function escapeHtml(s: string): string {
   return s
@@ -14,7 +17,9 @@ function escapeHtml(s: string): string {
 
 function createTransporter() {
   const user = process.env.GMAIL_USER;
-  const pass = process.env.GMAIL_APP_PASSWORD;
+  const pass = process.env.GMAIL_APP_PASSWORD?.replace(/\s/g, "");
+  console.log("[contact] GMAIL_USER:", user ?? "MISSING");
+  console.log("[contact] GMAIL_APP_PASSWORD:", pass ? `set (${pass.length} chars)` : "MISSING");
   if (!user || !pass) return null;
   return nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -25,13 +30,17 @@ function createTransporter() {
 }
 
 export async function POST(request: Request) {
+  console.log("[contact] POST received");
+
   const transporter = createTransporter();
   if (!transporter) {
+    console.error("[contact] Transporter creation failed — missing env vars");
     return NextResponse.json(
       { error: "Email not configured (missing GMAIL_USER or GMAIL_APP_PASSWORD)" },
-      { status: 500 }
+      { status: 500 },
     );
   }
+  console.log("[contact] Transporter created");
 
   let body: {
     name?: string;
@@ -43,24 +52,26 @@ export async function POST(request: Request) {
 
   try {
     body = await request.json();
-  } catch {
-    return NextResponse.json(
-      { error: "Invalid JSON body" },
-      { status: 400 }
-    );
+    console.log("[contact] Body parsed:", { name: body.name, email: body.email, phone: body.phone, interest: body.interest, messageLength: body.message?.length });
+  } catch (err) {
+    console.error("[contact] Failed to parse JSON body:", err);
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
   const { name, email, phone, interest, message } = body || {};
   if (!name?.trim() || !email?.trim() || !message?.trim()) {
+    console.warn("[contact] Missing required fields:", { name: !!name, email: !!email, message: !!message });
     return NextResponse.json(
       { error: "Missing required fields: name, email, message" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   const fromName = process.env.GMAIL_FROM_NAME || "Local Digital Business";
   const fromEmail = process.env.GMAIL_USER!;
   const subject = `Contact: ${interest || "Enquiry"} – ${name}`;
+  console.log("[contact] Sending email — from:", `${fromName} <${fromEmail}>`, "to:", TO_EMAILS, "subject:", subject);
+
   const text = [
     `Name: ${name}`,
     `Email: ${email}`,
@@ -78,7 +89,7 @@ export async function POST(request: Request) {
   ].join("");
 
   try {
-    await transporter.sendMail({
+    const info = await transporter.sendMail({
       from: `"${fromName}" <${fromEmail}>`,
       to: TO_EMAILS,
       replyTo: email,
@@ -86,9 +97,10 @@ export async function POST(request: Request) {
       text,
       html,
     });
+    console.log("[contact] Email sent — messageId:", info.messageId, "response:", info.response);
   } catch (err) {
+    console.error("[contact] SMTP sendMail error:", err);
     const msg = err instanceof Error ? err.message : "Failed to send email";
-    console.error("SMTP error:", err);
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 

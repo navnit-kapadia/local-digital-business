@@ -3,7 +3,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { MapPin, Send } from "lucide-react";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 
@@ -14,6 +14,12 @@ const contactSchema = z.object({
   interest: z.string().trim().min(1, "Please select an option"),
   message: z.string().trim().min(1, "Message is required").max(1000),
 });
+
+function generateCaptcha() {
+  const a = Math.floor(Math.random() * 10) + 1;
+  const b = Math.floor(Math.random() * 10) + 1;
+  return { question: `What is ${a} + ${b}?`, answer: a + b };
+}
 
 const Contact = () => {
   const { toast } = useToast();
@@ -26,6 +32,17 @@ const Contact = () => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [captcha, setCaptcha] = useState(generateCaptcha);
+  const [captchaInput, setCaptchaInput] = useState("");
+
+  const refreshCaptcha = useCallback(() => {
+    setCaptcha(generateCaptcha());
+    setCaptchaInput("");
+  }, []);
+
+  useEffect(() => {
+    refreshCaptcha();
+  }, [refreshCaptcha]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -39,11 +56,17 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = contactSchema.safeParse(form);
+    const fieldErrors: Record<string, string> = {};
     if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
       result.error.errors.forEach((err) => {
         if (err.path[0]) fieldErrors[err.path[0] as string] = err.message;
       });
+    }
+    if (parseInt(captchaInput, 10) !== captcha.answer) {
+      fieldErrors.captcha = "Incorrect answer, please try again";
+      refreshCaptcha();
+    }
+    if (Object.keys(fieldErrors).length > 0) {
       setErrors(fieldErrors);
       return;
     }
@@ -69,6 +92,7 @@ const Contact = () => {
           description: "We'll get back to you shortly.",
         });
         setForm({ name: "", email: "", phone: "", interest: "", message: "" });
+        refreshCaptcha();
       } else {
         toast({
           title: "Something went wrong",
@@ -225,6 +249,31 @@ const Contact = () => {
                   {errors.message && (
                     <p className="text-sm text-destructive mt-1">
                       {errors.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label
+                    htmlFor="captcha"
+                    className="text-sm font-medium text-foreground block mb-1.5"
+                  >
+                    {captcha.question}
+                  </label>
+                  <input
+                    id="captcha"
+                    name="captcha"
+                    type="number"
+                    value={captchaInput}
+                    onChange={(e) => {
+                      setCaptchaInput(e.target.value);
+                      setErrors({ ...errors, captcha: "" });
+                    }}
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    placeholder="Your answer"
+                  />
+                  {errors.captcha && (
+                    <p className="text-sm text-destructive mt-1">
+                      {errors.captcha}
                     </p>
                   )}
                 </div>
