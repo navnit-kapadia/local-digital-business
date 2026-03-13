@@ -6,10 +6,10 @@ Website: https://localdigitalbusiness.com.au
 Location: Melbourne, VIC, Australia
 Contact: sshah@localdigitalbusiness.com.au
 
-Description: Local Digital Business builds professional websites and smart AI assistants for sole traders and small businesses across Australia. Fixed pricing, live in 5 days, no tech stress.
+Description: Local Digital Business builds professional websites and smart AI assistants for solopreneurs and small businesses across Australia. Fixed pricing, live in 5 days, no tech stress.
 
 Key Features:
-- Website design and development for small businesses and sole traders
+- Website design and development for small businesses and solopreneurs
 - AI-powered chat assistants that handle enquiries 24/7
 - SEO (Search Engine Optimisation) to rank on Google
 - AEO (Answer Engine Optimisation) to appear in ChatGPT, Gemini, and Perplexity answers
@@ -22,7 +22,7 @@ Pricing:
 - Hosting and maintenance from $39.99/month
 
 Target Customers:
-- Sole traders in Australia
+- Solopreneurs in Australia
 - Small businesses (1–10 employees)
 - Tradies (plumbers, electricians, builders)
 - Restaurants and cafes

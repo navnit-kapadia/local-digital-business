@@ -112,7 +112,7 @@ const Hero = () => {
           >
             <Zap className="w-4 h-4 text-accent fill-accent" />
             <span className="text-sm text-white/80 font-medium tracking-wide">
-              For sole traders and small businesses
+              For solopreneurs and small businesses
             </span>
           </motion.div>
 

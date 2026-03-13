@@ -35,7 +35,7 @@ export default async function Image() {
             display: "flex",
           }}
         >
-          For sole traders and small businesses in Australia
+          For solopreneurs and small businesses in Australia
         </div>
 
         {/* Headline */}

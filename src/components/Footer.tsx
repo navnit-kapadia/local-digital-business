@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import logo from "@/assets/ldb-logo-clean.png";
+import logo from "@/assets/ldb-logo-cropped.svg";
 
 const Footer = () => {
   return (
@@ -11,9 +11,11 @@ const Footer = () => {
             <Image
               src={logo}
               alt="Local Digital Business"
-              className="h-28 sm:h-32 w-auto mb-[-8px]"
-              style={{ clipPath: "inset(0 0 12% 0)" }}
-              sizes="(max-width: 640px) 7rem, 8rem"
+              className="h-10 sm:h-12 md:h-14 w-auto max-h-14 object-contain"
+              width={267}
+              height={80}
+              sizes="(max-width: 640px) 160px, (max-width: 768px) 180px, 200px"
+              unoptimized
             />
           </Link>
           <div className="flex items-center gap-6 text-[13px]">

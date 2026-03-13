@@ -25,7 +25,7 @@ const plans = [
       { text: "SEO & AEO setup", tooltip: "seo" } as { text: string; tooltip?: string },
       "Live in 5 days",
     ],
-    bestFor: "Sole traders who need a simple, professional online presence.",
+    bestFor: "Solopreneurs who need a simple, professional online presence.",
     popular: false,
   },
   {

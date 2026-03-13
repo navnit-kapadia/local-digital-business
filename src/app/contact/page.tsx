@@ -10,7 +10,7 @@ export const metadata = {
   openGraph: {
     title: `Contact | ${SITE_NAME}`,
     description:
-      "Contact us for a free chat. We build websites and smart assistants for sole traders and small businesses in Australia.",
+      "Contact us for a free chat. We build websites and smart assistants for solopreneurs and small businesses in Australia.",
     url: `${SITE_URL}/contact`,
   },
   alternates: { canonical: `${SITE_URL}/contact` },

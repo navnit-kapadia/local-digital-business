@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   description: DEFAULT_DESCRIPTION,
   keywords: [
     "small business website Australia",
-    "sole trader website",
+    "solopreneur website",
     "AI assistant for business",
     "website Melbourne",
     "fixed price website",
@@ -83,6 +83,9 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
   },
   category: "business",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

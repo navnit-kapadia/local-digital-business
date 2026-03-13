@@ -8,7 +8,7 @@ export const SITE_URL =
 
 export const SITE_NAME = "Local Digital Business";
 export const DEFAULT_DESCRIPTION =
-  "Simple websites and smart AI assistants for sole traders and small businesses in Australia. Live in 5 days, fixed pricing. SEO and AEO ready.";
+  "Simple websites and smart AI assistants for solopreneurs and small businesses in Australia. Live in 5 days, fixed pricing. SEO and AEO ready.";
 export const DEFAULT_TITLE = `${SITE_NAME} — Websites & AI Assistants for Small Businesses`;
 export const LOCALE = "en_AU";
 export const LOCALE_ALT = "en-AU";
@@ -99,7 +99,7 @@ export function buildServiceSchema(): object {
     "@id": `${SITE_URL}/#service`,
     name: "Website and Smart Assistant for Small Business",
     description:
-      "Professional one-page and multi-page websites with optional 24/7 AI assistant for sole traders and small businesses. Fixed pricing, live in 5 days. Includes SEO and AEO setup.",
+      "Professional one-page and multi-page websites with optional 24/7 AI assistant for solopreneurs and small businesses. Fixed pricing, live in 5 days. Includes SEO and AEO setup.",
     provider: { "@id": `${SITE_URL}/#organization` },
     areaServed: { "@type": "Country", name: "Australia" },
     serviceType: ["Web Design", "SEO", "AI Assistant", "Digital Marketing"],

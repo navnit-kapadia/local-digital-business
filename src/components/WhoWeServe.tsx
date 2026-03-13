@@ -35,7 +35,7 @@ const WhoWeServe = () => {
             <span className="text-accent">Like Yours.</span>
           </h2>
           <p className="text-lg text-white/50 max-w-xl mx-auto">
-            Sole traders and small teams who want more customers without more
+            Solopreneurs and small teams who want more customers without more
             stress.
           </p>
         </motion.div>

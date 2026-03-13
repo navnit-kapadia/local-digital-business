@@ -12,10 +12,9 @@ import {
   AlertCircle,
   CheckCircle2,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { z } from "zod";
-
-const ACCESS_KEY = "1d2d50f6-b09c-4b2c-b379-3af5fe9427b8";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100, "Name is too long"),
@@ -72,8 +71,10 @@ const Contact = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [serverError, setServerError] = useState("");
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
-  const isFormValid = contactSchema.safeParse(form).success;
+  const isFormValid = contactSchema.safeParse(form).success && !!recaptchaToken;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
@@ -107,30 +108,43 @@ const Contact = () => {
       setErrors(fieldErrors);
       return;
     }
+    if (!recaptchaToken) {
+      setServerError("Please complete the reCAPTCHA verification.");
+      return;
+    }
 
     setSubmitting(true);
     try {
-      const formData = new FormData();
-      formData.append("access_key", ACCESS_KEY);
-      formData.append("subject", `Contact: ${form.interest} – ${form.name}`);
-      FIELDS.forEach((f) => formData.append(f, form[f]));
-
-      const res = await fetch("https://api.web3forms.com/submit", {
+      const res = await fetch("/api/contact", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          interest: form.interest,
+          message: form.message,
+          recaptchaToken,
+        }),
       });
-      const data = await res.json() as { success: boolean; message?: string };
+      const data = (await res.json()) as { success?: boolean; error?: string };
 
       if (data.success) {
         setSubmitted(true);
         setForm({ name: "", email: "", phone: "", interest: "", message: "" });
         setTouched({});
         setErrors({});
+        setRecaptchaToken(null);
+        recaptchaRef.current?.reset();
       } else {
-        setServerError(data.message ?? "Something went wrong. Please try again.");
+        setServerError(data.error ?? "Something went wrong. Please try again.");
+        setRecaptchaToken(null);
+        recaptchaRef.current?.reset();
       }
     } catch {
       setServerError("Network error. Please check your connection and try again.");
+      setRecaptchaToken(null);
+      recaptchaRef.current?.reset();
     } finally {
       setSubmitting(false);
     }
@@ -372,6 +386,16 @@ const Contact = () => {
                   )}
                 </div>
 
+                {/* reCAPTCHA */}
+                <div className="flex justify-center">
+                  <ReCAPTCHA
+                    ref={recaptchaRef}
+                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? ""}
+                    onChange={(token) => setRecaptchaToken(token)}
+                    onExpired={() => setRecaptchaToken(null)}
+                  />
+                </div>
+
                 {/* Server error */}
                 {serverError && (
                   <div className="flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
@@ -397,7 +421,7 @@ const Contact = () => {
 
                   {!isFormValid && (
                     <p className="text-center text-xs text-muted-foreground">
-                      Please fill in all required fields to send your message.
+                      {recaptchaToken ? "Please fill in all required fields to send your message." : "Please complete the reCAPTCHA and fill in all required fields."}
                     </p>
                   )}
                 </div>

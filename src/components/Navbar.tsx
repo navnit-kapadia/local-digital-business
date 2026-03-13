@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import logo from "@/assets/ldb-logo-clean.png";
+import Image from "next/image";
+import logo from "@/assets/ldb-logo-cropped.svg";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -16,15 +16,22 @@ const Navbar = () => {
     >
       {/* Main bar */}
       <div className="container-narrow flex items-center justify-between h-16 sm:h-20 px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center" onClick={() => setOpen(false)}>
-          <Image
-            src={logo}
-            alt="Local Digital Business"
-            className="h-14 sm:h-28 w-auto sm:mb-[-8px]"
-            style={{ clipPath: "inset(0 0 12% 0)" }}
-            sizes="(max-width: 640px) 3.5rem, 8rem"
-            priority
-          />
+        <Link
+          href="/"
+          className="flex h-full items-center shrink-0 self-stretch p-0"
+          onClick={() => setOpen(false)}
+        >
+          <span className="flex h-10 sm:h-12 md:h-14 items-center justify-center overflow-hidden p-0">
+            <Image
+              src={logo}
+              alt="Local Digital Business"
+              className="h-full w-auto max-h-[80px] object-contain object-center"
+              width={267}
+              height={80}
+              sizes="(max-width: 640px) 120px, (max-width: 768px) 140px, 160px"
+              priority
+            />
+          </span>
         </Link>
 
         {/* Desktop nav */}
